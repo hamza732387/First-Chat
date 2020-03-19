@@ -1,0 +1,32 @@
+.input{
+    width: 50%;
+    height: 50px;
+    border-radius: 20px;
+    border: 2px solid black;
+    outline: none;
+    font-size: 25px;
+    color: rgb(255, 174, 0);
+    padding-left: 20px;
+}
+button{
+    margin-left: 2%;
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px gray;
+    font-weight: bold;
+    font-size: 20px;
+}
+.div{
+    background-color: rgb(30, 255, 0);
+    width: 50%;
+    height: 75px;
+    font-size: 35px;
+    padding-top: 15px;
+    margin-left: -100px;
+font-weight: bold;
+border-radius: 20px;
+}

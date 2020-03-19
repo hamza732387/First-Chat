@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+    <!-- <link rel="stylesheet" href="../home/css.css"> -->
+    <title>Document</title>
+    <style>
+body{
+    overflow-y: scroll;
+    z-index: 52;
+}
+::-webkit-scrollbar {
+    width: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+   background-color: rgb(0, 0, 0);
+    border-radius: 5px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #e66e1f; 
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(105, 102, 102); 
+  }
+.input{
+    width: 50%;
+    height: 50px;
+    border-radius: 20px;
+    border: 2px solid black;
+    outline: none;
+    font-size: 25px;
+    color: rgb(255, 174, 0);
+    padding-left: 20px;
+}
+button{
+    margin-left: 2%;
+    height: 75px;
+    width: 75px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px gray;
+    font-weight: bold;
+    font-size: 20px;
+}
+.div{
+    background-color: rgb(30, 255, 0);
+    width: 50%;
+    height: 75px;
+    font-size: 35px;
+    padding-top: 15px;
+    margin-left: -100px;
+font-weight: bold;
+border-radius: 20px;
+margin-top: 15px;
+}
+.msg{
+    position : fixed;
+    z-index: 50;
+background-color: white;
+top: 0;
+left: 0;
+width: 100%;
+}
+
+
+.hh{
+    background-color: rgb(255, 123, 0);
+    margin-top: 10px;
+    border-radius: 20px;
+}
+.list{
+    margin-top: 100px;
+}
+    </style>
+</head>
+<body>
+    <center>
+        <div class="offff">
+        <div id="nameDiv" style="display: none;">
+            <input type="text" class="input" id="name" placeholder="enter your name ..... ">
+            <button onclick="Save_Name ()">save </button>
+        </div>
+        <div class="msg" id="msg_D" style="display: none;">
+            <input type="text" class="input" id="msg" placeholder="enter your msg ..... ">
+            <button onclick="Send_Msg()"> Send </button>
+           
+        </div>
+        <div id="div" class="list">
+
+
+        </div>
+        <div id="div1">
+            <h1> Sign Up </h1>
+<input type="text" class="input" id="input" placeholder="name"> <br><br>
+<input type="text" class="input" id="email" placeholder="email"><br><br>
+<input type="text" class="input" id="password" placeholder="password"><br><br>
+<button onclick="Add_Data_To_Database()"> Send </button>
+<button onclick="login()"> log in </button>
+</div>
+
+<div id="div2" style="display: none;">
+<h1> Log In </h1>
+    <input type="text" class="input" id="email_log" placeholder="email"><br><br>
+<input type="text" class="input" id="password_log" placeholder="password"><br><br>
+<button onclick="Gdd_Data_To_Database()"> Send </button>
+</div>
+
+<!-- <p>Enter your name please :</p>   <input type="text" id="name" > -->
+<!-- <input type="text" id="masseg" placeholder="massege"> -->
+<!-- <button id="Sname" onclick="Save_Name ()">save</button>
+<button onclick="send()" id="send"> send </button> -->
+<!-- <div id="div">
+
+</div> -->
+</div>
+</center>
+<script>
+    let div = document.getElementById("div")
+let socket = io.connect('https://gallery-mh.herokuapp.com');
+let input = document.getElementById('input');
+let div2 = document.getElementById('div2');
+let div1 = document.getElementById('div1');
+let email = document.getElementById('email');
+let password = document.getElementById('password');
+let email_l = document.getElementById('email_log');
+let password_l = document.getElementById('password_log');
+let msg_D = document.getElementById('msg_D');
+let msg = document.getElementById('msg');
+let nameDiv = document.getElementById('nameDiv');
+let name = document.getElementById('name');
+// Get_Data_From_Database()
+
+function Save_Name () {
+   nameDiv.style.display = 'none';
+   msg_D.style.display = 'block';
+}
+
+function Send_Msg() {
+    socket.emit('hamza' , {
+        name : name.value,
+        msg : msg.value
+    })
+    msg.value = '';
+}
+socket.on('new_hamza' , data=>{
+    console.log(data)
+    div.innerHTML  += `<div class = "hh">
+         <strong>${data.name}</strong> <span>${data.msg}</span> <br> 
+         </div>
+     `
+})
+
+
+function login() {
+    div2.style.display = 'block';
+div1.style.display = 'none';
+}
+
+let header = new Headers()
+header.append('content-type' , 'application/json');
+function Add_Data_To_Database() {
+
+fetch('https://gallery-mh.herokuapp.com/' ,{
+    method : 'post',
+    headers : header,
+    body : JSON.stringify({
+        name : input.value,
+        email : email.value,
+        password : password.value
+    })
+}).then(re=>{
+    return re.json()
+}).then(data=>{
+    // console.log(data)
+})
+// location.reload();
+div2.style.display = 'block';
+div1.style.display = 'none';
+}
+
+function Gdd_Data_To_Database() {
+
+fetch('https://gallery-mh.herokuapp.com/log' ,{
+    method : 'post',
+    headers : header,
+    body : JSON.stringify({
+        // name : input.value,
+        email : email_l.value,
+        password : password_l.value
+    })
+}).then(re=>{
+    return re.json()
+}).then(data=>{
+let obb = data.result
+for(let i=0 ; i<obb.length ; i++) {
+    // console.log(obb[i].name)/
+    localStorage.setItem('name' , obb[i].name)
+}
+           
+        
+    // console.log(data)
+    if(data.status == 200) {
+        div2.style.display = 'none';
+div1.style.display = 'none';
+nameDiv.style.display = 'block';
+    }else{
+        alert('false')
+    }
+})
+// location.reload();
+div2.style.display = 'block';
+div1.style.display = 'none';
+}
+// function Get_Data_From_Database() {
+    
+//     fetch('http://localhost:3000/free' ,{
+//         method : 'get',
+//     }).then(re=>{
+//         return re.json()
+//     }).then(data=>{
+//         console.log(data)
+//         for(let i=0 ; i<data.length; i++) {
+//             div.innerHTML += `<div class="div">${data[i].name}</div>`
+//         }
+//     })
+//     }
+</script>
+</body>
+</html>
